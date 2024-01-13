@@ -1,5 +1,7 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QRadioButton, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit, QGroupBox
+from PyQt5.QtCore import Qt, QTimer, QRegExp
+from PyQt5.QtGui import QIntValidator
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QLineEdit, QGroupBox
+
 
 app = QApplication([])
 win = QWidget()
@@ -23,15 +25,122 @@ scr2_widgets = {
     "name_input": QLineEdit(),
     "age_label": QLabel("Enter your age:"),
     "age_input": QLineEdit(),
-    "instructions1": QLabel("Instructions"),
+    "instructions1": QLabel("Lie on you back and take your pulse for 15 seconds. Click the 'start first test' button to start the timer. Write down the result in the appropriate field."),
     "test_1": QPushButton("Start the first test"),
-    "p1_input": QLineEdit(),
-    "instructions2": QLabel("Instructions"),
-    "results_btn": QPushButton("Show Results")  # Add the results button
+    "instructions2": QLabel("Perform 30 squats in 45 seconds. To do this, click on the 'Start doing squats' button"),
+    "test_2": QPushButton("Start doing squats"),
+    "instructions3": QLabel("Instructions nfghgfhfgfghgfghgf"),
+    "test_3": QPushButton("Start doing...."),
+    "results_btn": QPushButton("Show Results"),
+    "p1_input": QLineEdit(),  # Added missing input field
+    "p2_input": QLineEdit()   # Added missing input field
 }
+
+int_validator = QIntValidator()
+
+scr2_widgets["age_input"].setValidator(int_validator)
+scr2_widgets["p1_input"].setValidator(int_validator)
+scr2_widgets["p2_input"].setValidator(int_validator)
 for widget in scr2_widgets.values():
     screen2.addWidget(widget)
-scr2_widgets["results_btn"].clicked.connect(lambda: on_scr2_btn())  # Connect the button to function
+
+scr2_widgets["results_btn"].clicked.connect(lambda: on_scr2_btn())
+timer = QTimer()
+time_label = QLabel()
+timer2 = QTimer()
+time_label2 = QLabel()
+timer3 = QTimer()
+time_label3 = QLabel()
+screen2.addWidget(time_label)
+screen2.addWidget(time_label2)
+screen2.addWidget(time_label3)
+time_elapsed = 0
+time_elapsed2 = 0
+time_elapsed3 = 0
+def start_timer():
+    timer.start(1000)
+    global time_elapsed
+    time_elapsed = 0
+    timer.timeout.connect(update_timer)
+
+def update_timer():
+    global time_elapsed
+    time_elapsed += 1
+    time_label.setText(f"Time Elapsed: {time_elapsed} seconds")
+    if time_elapsed > 5:
+        time_label.setText("Enter pulse, then begin test 2.")
+        timer.stop()
+def start_timer2():
+    timer2.start(1000)
+    global time_elapsed2
+    time_elapsed2 = 0
+    timer2.timeout.connect(update_timer2)
+
+def update_timer2():
+    global time_elapsed2
+    time_elapsed2 += 1
+    time_label2.setText(f"Time Elapsed: {time_elapsed2} seconds")
+    if time_elapsed2 > 5:
+        time_label2.setText("Enter pulse, then begin test 3.")
+        timer2.stop()
+def start_timer3():
+    timer3.start(1000)
+    global time_elapsed3
+    time_elapsed3 = 0
+    timer3.timeout.connect(update_timer3)
+
+def update_timer3():
+    global time_elapsed3
+    time_elapsed3 += 1
+    time_label3.setText(f"Time Elapsed: {time_elapsed3} seconds")
+    if time_elapsed3 > 5:
+        time_label3.setText("Done!")
+        timer3.stop()
+
+
+scr2_widgets["test_1"].clicked.connect(start_timer)
+scr2_widgets["test_2"].clicked.connect(start_timer2)
+scr2_widgets["test_3"].clicked.connect(start_timer3)
+
+def interpret_results(age,index):
+    result = "not calculated"
+    ranges = (1,2,3,4)
+    if 7 <= age and age <= 8:
+        ranges = [0.5,, 6, 11,15]
+    elif 8 < age and age <= 8:
+        ranges = [2,7.5, 12.5, 16.5]
+    elif 10 < age and age <= 8:
+       ranges = [5, 10.5, 15.5, 19.5]
+    elif 14< age and age <= 8
+        ranges = [6.5, 12, 17, 21]
+    else result = "Age must be 7 or below"
+
+class TestWin(QWidget):
+    def timer_sits(self):
+        time = QTime(0,0,30)
+        self.tesdt.timeout.connect(self.timer2Event)
+        self.timer.start(1500)
+    def timer2Event(self):
+        self.text_timer.setText(time.toString("hh:mm:ss")[6:8])
+
+class TestWin(QWidget):
+    def timer3Event(self):
+        if int(time.toString("hh:mm:ss")[6:8]) <= 15:
+            self.text_timer.setStyleSheet("color: rgb(0, 255, 0)")
+        elif int(time.toString("hh:mm:ss")[6:8]) <= 15:
+            self.text_timer.setStyleSheet("color: rgb(0, 255, 0)")
+        else:
+            self.text_timer.setStyleSheet()
+def on_scr1_btn():
+    scr1.hide()
+    scr2.show()
+    scr3.hide()
+
+def on_scr2_btn():
+    # Add logic to handle screen 2 results button functionality
+    pass
+
+screen1btn.clicked.connect(on_scr1_btn)
 
 # create screen 3 interface
 screen3 = QVBoxLayout()
